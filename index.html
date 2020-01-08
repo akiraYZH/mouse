@@ -14,12 +14,12 @@
     <div class="glow"></div>
     <script>
         let oGlow = document.querySelector('.glow');
-        let mouse_x = mouse_y = oGlow_x = oGlow_Y = factor = 0;
-        let base = 1;
+        let mouse_x = mouse_y = last_x = last_y = 0;
+        // let base = 1;
         let timer1 = null;
         let timer2 = null;
         let _switch = false;
-        // let is_run = false;
+        let is_run = false;
         let save_timer = null;
 
         oGlow.style.position = 'absolute';
@@ -34,9 +34,15 @@
 
             if (!_switch) {
                 _switch = true;
-
-
-                is_run = true;
+                if (!is_run) {
+                    timer1 = setInterval(move, 16);
+                    is_run = true;
+                    
+                }
+                
+                
+                
+                
                 oGlow.style.transition = 'none';
                 base = 1;
                 ev = ev || window.event;
@@ -45,8 +51,9 @@
 
                 clearInterval(timer2);
                 timer2 = setTimeout(() => {
-                    oGlow.style.transition = '0.5s';
-                    base = 0;
+                    oGlow.style.transition = '0.5s cubic-bezier(.24,-1.69,.83,.67)';
+                    // base = 0;
+                    oGlow.style.transform = 'scale(0)';
                 }, 2000);
             }
 
@@ -54,24 +61,34 @@
 
         function move() {
             // console.log('123');
-
+            
             let speed = 0.125;
-            oGlow_x = oGlow.offsetLeft;
-            oGlow_y = oGlow.offsetTop;
+            let oGlow_x = oGlow.offsetLeft;
+            let oGlow_y = oGlow.offsetTop;
             let oGlow_width = parseInt(getStyle(oGlow, 'width'));
             let oGlow_height = parseInt(getStyle(oGlow, 'height'));
-            factor = (Math.abs(mouse_x - oGlow_x + mouse_y - oGlow_y) / 150);
+            let factor = (Math.abs(mouse_x - oGlow_x + mouse_y - oGlow_y) / 150);
+
+            last_x = parseFloat(oGlow.style.left);
+            last_y = parseFloat(oGlow.style.top);
+
 
             oGlow.style.left = oGlow_x + (mouse_x - oGlow_x - oGlow_width / 2) * speed + 'px';
             oGlow.style.top = oGlow_y + (mouse_y - oGlow_y - oGlow_height / 2) * speed + 'px';
-
-            (factor < 0.25) && (factor = 0);
-            oGlow.style.transform = `scale(${base+factor})`;
-
+            console.log(last_x, last_y, oGlow.style.left, oGlow.style.top);
+           
+            oGlow.style.transform = `scale(${1+factor})`;
+            
+            if (last_x == parseFloat(oGlow.style.left) && last_y == parseFloat(oGlow.style.top)) {
+                clearInterval(timer1);
+                is_run=false;
+                // console.log('123');
+                
+            }
 
         }
 
-        timer1 = setInterval(move, 16);
+
 
 
 
