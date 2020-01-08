@@ -1,0 +1,17 @@
+* {
+  padding: 0;
+  margin: 0;
+  list-style-type: none; }
+
+body {
+  height: 1000px;
+  background-color: black; }
+  body .glow {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 0 10px red;
+    pointer-events: none; }
+
+/*# sourceMappingURL=index.css.map */

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+    <a href="http://www.baidu.com">跳转</a>
+    <div class="glow"></div>
+    <script>
+        let oGlow = document.querySelector('.glow');
+        let mouse_x = mouse_y = 0;
+        let oGlow_x = oGlow_Y = 0;
+        let base = 1;
+        let timer1 = null;
+        let timer2 = null;
+        let is_run = false;
+        let save_timer = null;
+
+        oGlow.style.position = 'absolute';
+
+
+        save_timer = setInterval(() => {
+            is_run=false;
+        }, 50);
+
+        window.addEventListener('mousemove', (ev) => {
+            if (!is_run) {
+                is_run=true;
+                clearInterval(timer2);
+
+
+                oGlow.style.transition = 'none';
+                base = 1;
+                ev = ev || window.event;
+                mouse_x = ev.pageX;
+                mouse_y = ev.pageY;
+                timer2 = setTimeout(() => {
+                    oGlow.style.transition = '0.5s';
+                    base = 0;
+                }, 2000);
+            }
+
+        });
+
+        function move() {
+
+            let speed = 0.125;
+            oGlow_x = oGlow.offsetLeft;
+            oGlow_y = oGlow.offsetTop;
+            let oGlow_width = parseInt(getStyle(oGlow, 'width'));
+            let oGlow_height = parseInt(getStyle(oGlow, 'height'));
+            let factor = (Math.abs(mouse_x - oGlow_x + mouse_y - oGlow_y) / 150);
+
+            oGlow.style.left = oGlow_x + (mouse_x - oGlow_x - oGlow_width / 2) * speed + 'px';
+            oGlow.style.top = oGlow_y + (mouse_y - oGlow_y - oGlow_height / 2) * speed + 'px';
+
+            (factor < 0.25) && (factor = 0);
+            oGlow.style.transform = `scale(${base+factor})`;
+
+            console.log(factor);
+
+
+
+        }
+
+        timer1 = setInterval(move, 30);
+
+
+
+        function getStyle(obj, name) {
+            if (obj.currentStyle) {
+                return obj.currentStyle[name];
+            } else {
+                return getComputedStyle(obj, false)[name];
+            }
+        }
+    </script>
+</body>
+
+</html>
